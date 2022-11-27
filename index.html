@@ -69,25 +69,30 @@
     </form>
 
     <section id="error-btns">
-      <button>Console Log</button>
-      <button>Console Error</button>
-      <button>Console Count</button>
-      <button>Console Warn</button>
-      <button>Console Assert</button>
-      <button>Console Clear</button>
-      <button>Console Dir</button>
-      <button>Console dirxml</button>
-      <button>Console Group Start</button>
-      <button>Console Group End</button>
-      <button>Console Table</button>
-      <button>Start Timer</button>
-      <button>End Timer</button>
-      <button>Console Trace</button>
-      <button>Trigger a Global Error</button>
+      <button id = slog>Console Log</button>
+      <button id = error>Console Error</button>
+      <button id = count>Console Count</button>
+      <button id = warn>Console Warn</button>
+      <button id = assert>Console Assert</button>
+      <button id = clear>Console Clear</button>
+      <button id = dir>Console Dir</button>
+      <button id = dirxml>Console dirxml</button>
+      <button id = gstart>Console Group Start</button>
+      <button id = gend>Console Group End</button>
+      <button id = table>Console Table</button>
+      <button id = tstart>Start Timer</button>
+      <button id = tend>End Timer</button>
+      <button id = trace>Console Trace</button>
+      <button id = trigger>Trigger a Global Error</button>
     </section>
   </main>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>                     
   <script>
+    window.TrackJS && TrackJS.install({ 
+    token: "567db576ac8d4c3cab295135db53b60e"
+    // for more configuration options, see https://docs.trackjs.com
+  });
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,13 +100,108 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      class InvalidType extends Error {
+        constructor(message) {
+        super(message);
+        this.name = "InvalidTypeError";
+        }
+      }
+      if(firstNum===""){
+        throw new InvalidType("INVALID FIRSTNUMBER TYPE")
+      }
+      if(secondNum===""){
+        throw new InvalidType("INVALID SECONDNUMBER TYPE")
+      }
+      try{
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch(err){
+        console.error(err);
+      }finally{
+      console.log("Done");
+      }
     });
+    
+
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+    let clog = document.getElementById("slog");
+    clog.addEventListener('click',e=>{
+      console.log("Console Log Demo");
+    });
+    let cerr = document.getElementById("error");
+    cerr.addEventListener('click',e=>{
+      console.error("Console Error Demo");
+    });
+    let ccount = document.getElementById("count");
+    ccount.addEventListener('click',e=>{
+      console.count("Count Button");
+    });
+    let cwarn = document.getElementById("warn");
+    cwarn.addEventListener('click',e=>{
+      console.warn("Console Warn Demo");
+    });
+    let cassert = document.getElementById("assert");
+    cassert.addEventListener('click',e=>{
+      const errorMsg = "The number does not equal to 3 ";
+      let number = 2;
+      console.assert(number === 3, '%o', { number, errorMsg });
+    });
+    let cclear = document.getElementById("clear");
+    cclear.addEventListener('click',e=>{
+      console.clear();
+    });
+    let cdir = document.getElementById("dir");
+    cdir.addEventListener('click',e=>{
+      console.dir(cdir);
+    });
+    let cdirxml = document.getElementById("dirxml");
+    cdirxml.addEventListener('click',e=>{
+      console.dirxml(cdirxml);
+    });
+    let cgstart = document.getElementById("gstart");
+    cgstart.addEventListener('click',e=>{
+      console.group();
+    });
+    let cgend = document.getElementById("gend");
+    cgend.addEventListener('click',e=>{
+      console.groupEnd();
+    });
+    let ctable = document.getElementById("table");
+    ctable.addEventListener('click',e=>{
+      function cclass(name,num){
+        this.name=name;
+        this.num=num;
+      }
+      const n1 = new cclass("Software Engineering",110);
+      const n2 = new cclass("Programming Language",130);
+      const n3 = new cclass("Advanced Software",112);
+      console.table([n1,n2,n3]);
+    });
+    let ctstart = document.getElementById("tstart");
+    ctstart.addEventListener('click',e=>{
+      console.time("Timer Button");
+    });
+    let ctend = document.getElementById("tend");
+    ctend.addEventListener('click',e=>{
+      console.timeEnd("Timer Button");
+    });
+    let ctrace = document.getElementById("trace");
+    ctrace.addEventListener('click',e=>{
+      function num(nm){
+        console.trace(nm);
+      }
+      num("v");
+    });
+    let ctrigger = document.getElementById("trigger");
+    ctrigger.addEventListener('click',e=>{
+      somerandomfunction();
+    });
+    window.addEventListener('error',e=>{
+      console.error("Sadly an error happened my friend");
+    });
   </script>
 </body>
 
